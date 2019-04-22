@@ -1,0 +1,31 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/patient_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
+        android:scrollbars="vertical"
+        />
+
+    <Button
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/background_button"
+        android:text="+"
+        android:textSize="40sp"
+        android:textColor="#ffffff"
+        android:elevation="6dp"
+        android:stateListAnimator="@null"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:id="@+id/novo_aluno"/>
+
+</RelativeLayout>
