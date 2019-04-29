@@ -16,14 +16,14 @@
                 android:id="@+id/formulario_foto"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:src="@drawable/ic_person_black_24dp"
-                android:background="#00A8EC"/>
+                android:src="@drawable/ic_person_white_48dp"
+                android:background="@color/primaryDarkColor"/>
 
             <Button
                 android:id="@+id/formulario_botao_foto"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:background="@drawable/ic_person_black_24dp"
+                android:background="@drawable/ic_camera_alt_white_36dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"/>
@@ -39,6 +39,11 @@
             android:layout_height="wrap_content"
             android:hint="Telefone"
             android:id="@+id/patient_phone"/>
+
+        <EditText android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Data de Nascimento"
+            android:id="@+id/patient_date_of_birth"/>
 
     </LinearLayout>
 

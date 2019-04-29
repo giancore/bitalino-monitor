@@ -4,10 +4,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.bitalinomonitor.R;
-
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.bitalinomonitor.R;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

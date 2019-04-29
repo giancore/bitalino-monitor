@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.bitalinomonitor">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:name=".utils.UserApplication"
         android:allowBackup="true"
@@ -10,24 +14,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activities.DeviceActivity">
         </activity>
         <activity android:name=".activities.LoginActivity">
-        </activity>
-        <activity android:name=".activities.MainActivity" >
         </activity>
         <activity android:name=".activities.ScanDevicesActivity">
         </activity>
         <activity android:name=".activities.PatientActivity">
         </activity>
         <activity android:name=".activities.PatientListActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".activities.GraphViewActivity" android:screenOrientation="landscape" >
-
         </activity>
     </application>
 

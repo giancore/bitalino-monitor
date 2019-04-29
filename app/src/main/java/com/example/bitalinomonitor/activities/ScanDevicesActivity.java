@@ -6,15 +6,16 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
-
-import com.example.bitalinomonitor.R;
-import com.example.bitalinomonitor.adapters.BluetoothItensAdapter;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,20 +23,23 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.example.bitalinomonitor.R;
+import com.example.bitalinomonitor.adapters.BluetoothItensAdapter;
+
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import info.plux.pluxapi.BTHDeviceScan;
 import info.plux.pluxapi.Constants;
 
-import java.util.ArrayList;
-
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 
 public class ScanDevicesActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 10000;
+    private static final int SCAN_PERIOD = 10000;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 2;
-
     private static final int REQUEST_ENABLE_BT = 1;
     private boolean isScanDevicesUpdateReceiverRegistered = false;
 
@@ -76,21 +80,15 @@ public class ScanDevicesActivity extends AppCompatActivity implements SwipeRefre
 
         pullToRefresh.setOnRefreshListener(this);
 
-        pullToRefresh.post(new Runnable() {
-            @Override
-            public void run() {
-                pullToRefresh.setRefreshing(true);
-                scanDevice();
+        pullToRefresh.post(() -> {
+            pullToRefresh.setRefreshing(true);
+            scanDevice();
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(pullToRefresh.isRefreshing()) {
-                            pullToRefresh.setRefreshing(false);
-                        }
-                    }
-                }, SCAN_PERIOD);
-            }
+            new Handler().postDelayed(() -> {
+                if(pullToRefresh.isRefreshing()) {
+                    pullToRefresh.setRefreshing(false);
+                }
+            }, SCAN_PERIOD);
         });
     }
 
@@ -126,7 +124,7 @@ public class ScanDevicesActivity extends AppCompatActivity implements SwipeRefre
         }
     };
 
-  private void setupRecycler(){
+    private void setupRecycler(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         deviceListRecyclerView.setLayoutManager(layoutManager);
 
@@ -141,11 +139,8 @@ public class ScanDevicesActivity extends AppCompatActivity implements SwipeRefre
         bluetoothItensAdapter.removeAllItens();
 
         // Stops scanning after a pre-defined scan period.
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                stopScanDevice();
-            }
+        mHandler.postDelayed(() -> {
+            stopScanDevice();
         }, SCAN_PERIOD);
 
         bthDeviceScan.doDiscovery();
@@ -181,21 +176,15 @@ public class ScanDevicesActivity extends AppCompatActivity implements SwipeRefre
             }
         }
 
-        pullToRefresh.post(new Runnable() {
-            @Override
-            public void run() {
-                pullToRefresh.setRefreshing(true);
-                scanDevice();
+        pullToRefresh.post(() -> {
+            pullToRefresh.setRefreshing(true);
+            scanDevice();
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(pullToRefresh.isRefreshing()) {
-                            pullToRefresh.setRefreshing(false);
-                        }
-                    }
-                }, SCAN_PERIOD);
-            }
+            new Handler().postDelayed(() -> {
+                if(pullToRefresh.isRefreshing()) {
+                    pullToRefresh.setRefreshing(false);
+                }
+            }, SCAN_PERIOD);
         });
     }
 
@@ -222,12 +211,9 @@ public class ScanDevicesActivity extends AppCompatActivity implements SwipeRefre
     public void onRefresh() {
         scanDevice();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(pullToRefresh.isRefreshing()) {
-                    pullToRefresh.setRefreshing(false);
-                }
+        new Handler().postDelayed(() -> {
+            if(pullToRefresh.isRefreshing()) {
+                pullToRefresh.setRefreshing(false);
             }
         }, SCAN_PERIOD);
     }

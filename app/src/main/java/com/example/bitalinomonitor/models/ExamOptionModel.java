@@ -1,7 +1,6 @@
 package com.example.bitalinomonitor.models;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ExamOptionModel {
     public static String ECG = "Eletrocardiograma (ECG)";

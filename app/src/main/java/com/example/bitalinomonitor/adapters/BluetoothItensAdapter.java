@@ -1,17 +1,20 @@
 package com.example.bitalinomonitor.adapters;
+
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.bitalinomonitor.R;
 import com.example.bitalinomonitor.activities.DeviceActivity;
 import com.example.bitalinomonitor.utils.UserApplication;
 
 import java.util.List;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class BluetoothItensAdapter extends RecyclerView.Adapter<BluetoothItensViewHolder> {
     private final List<BluetoothDevice> devices;

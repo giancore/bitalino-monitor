@@ -3,10 +3,12 @@ package com.example.bitalinomonitor.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
-import android.hardware.Sensor;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.bitalinomonitor.R;
+import com.example.bitalinomonitor.models.ExamModel;
 import com.example.bitalinomonitor.models.ExamOptionModel;
 import com.example.bitalinomonitor.utils.SensorTransferFunctions;
 import com.jjoe64.graphview.DefaultLabelFormatter;
@@ -16,10 +18,8 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import info.plux.pluxapi.bitalino.BITalinoFrame;
@@ -27,7 +27,7 @@ import info.plux.pluxapi.bitalino.BITalinoFrame;
 public class GraphViewActivity extends AppCompatActivity {
 
     private List<BITalinoFrame> bitalinoFrames = new ArrayList<>();
-    private int selectedChannel;
+    private ExamModel exam;
 
     @BindView(R.id.graph)
     GraphView graph;
@@ -37,6 +37,9 @@ public class GraphViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
         ButterKnife.bind(this);
+
+        Intent intent = getIntent();
+        exam = (ExamModel) intent.getSerializableExtra("exam");
 
         //bitalinoFrames = getIntent().getParcelableArrayListExtra("FRAMES");
 
@@ -162,14 +165,14 @@ public class GraphViewActivity extends AppCompatActivity {
 
                 xValue = timeCounter / 100 * 1000;
 
-                if(selectedChannel == ExamOptionModel.EMG_Channel){
-                    yValue = SensorTransferFunctions.calculateElectromyographyValue(frame.getAnalog(selectedChannel));
-                } else if(selectedChannel == ExamOptionModel.ECG_Channel){
-                    yValue = SensorTransferFunctions.calculateElectrocardiographyValue(frame.getAnalog(selectedChannel));
-                } else if(selectedChannel == ExamOptionModel.EDA_Channel){
-                    yValue = SensorTransferFunctions.calculateElectrodermalActivityValue(frame.getAnalog(selectedChannel));
+                if(exam.getChannel() == ExamOptionModel.EMG_Channel){
+                    yValue = SensorTransferFunctions.calculateElectromyographyValue(frame.getAnalog(exam.getChannel()));
+                } else if(exam.getChannel() == ExamOptionModel.ECG_Channel){
+                    yValue = SensorTransferFunctions.calculateElectrocardiographyValue(frame.getAnalog(exam.getChannel()));
+                } else if(exam.getChannel() == ExamOptionModel.EDA_Channel){
+                    yValue = SensorTransferFunctions.calculateElectrodermalActivityValue(frame.getAnalog(exam.getChannel()));
                 } else {
-                    yValue = SensorTransferFunctions.calculateElectroencephalographyValue(frame.getAnalog(selectedChannel));
+                    yValue = SensorTransferFunctions.calculateElectroencephalographyValue(frame.getAnalog(exam.getChannel()));
                 }
 
                 dataPoints.add(new DataPoint(xValue, yValue));
@@ -192,7 +195,7 @@ public class GraphViewActivity extends AppCompatActivity {
         //graph.getViewport().setMaxX(80);
 
         // enable scaling
-		graph.getViewport().setMaxY(2);
+        graph.getViewport().setMaxY(2);
         graph.getViewport().setMaxX(2000);
         graph.getViewport().setScrollable(true);
         graph.getViewport().setScalableY(true);

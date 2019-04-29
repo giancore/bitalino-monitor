@@ -3,10 +3,10 @@ package com.example.bitalinomonitor.adapters;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.bitalinomonitor.R;
-import com.google.android.material.button.MaterialButton;
-
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.bitalinomonitor.R;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

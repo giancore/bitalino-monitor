@@ -1,10 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.PatientActivity">
+    tools:context=".activities.PatientListActivity">
 
-    <item android:title="Ok"
-        app:showAsAction="always"
-        android:id="@+id/menu_formulario_ok"/>
+    <item
+        android:id="@+id/menu_patient_list_1"
+        android:title="@string/menu_patient_list_menu1"/>
+    <item
+        android:id="@+id/menu_patient_list_2"
+        android:title="@string/menu_patient_list_menu2" />
 
 </menu>

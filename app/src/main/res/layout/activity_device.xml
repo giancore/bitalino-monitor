@@ -9,104 +9,118 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/bottom_sheet_behavior">
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-
-    <Chronometer
-        android:id="@+id/chronometer"
-        android:layout_width="match_parent"
-        android:textColor="@color/primaryColor"
-        android:layout_height="80dp"
-        android:textSize="60sp"
-        android:gravity="center_horizontal"/>
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:paddingTop="10dp">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.example.bitalinomonitor.utils.PausableChronometer
+            android:id="@+id/chronometer"
+            android:layout_width="match_parent"
+            android:textColor="@color/primaryColor"
+            android:layout_height="80dp"
+            android:textSize="60sp"
+            android:gravity="center_horizontal"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dispositivo:"
-            android:layout_marginEnd="10dp"/>
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingTop="10dp">
 
-        <TextView
-            android:id="@+id/txtDevice"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_device_text_device"
+                android:layout_marginEnd="10dp"/>
+
+            <TextView
+                android:id="@+id/textview_device"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bitalino XXX"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bitalino XXX"/>
+            android:orientation="horizontal"
+            android:gravity="center">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_device_text_status"
+                android:layout_marginEnd="10dp"/>
+
+            <TextView
+                android:id="@+id/textview_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aguardando"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:prompt="@string/exam_prompt"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="200dp">
+
+            <pl.bclogic.pulsator4droid.library.PulsatorLayout
+                android:id="@+id/pulsator"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:pulse_count="2"
+                app:pulse_duration="300"
+                app:pulse_repeat="0"
+                app:pulse_color="@color/primaryLightColor"
+                app:pulse_startFromScratch="false"
+                app:pulse_interpolator="Linear">
+
+                <Button
+                    android:layout_width="124dp"
+                    android:layout_height="124dp"
+                    android:background="@drawable/background_button"
+                    android:text="@string/activity_device_button_star"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:textSize="24sp"
+                    android:textColor="@color/primaryTextColor"
+                    android:elevation="6dp"
+                    android:id="@+id/button_play"/>
+
+            </pl.bclogic.pulsator4droid.library.PulsatorLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_process_exam"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Processar Exame"
+                android:textColor="@color/primaryDarkColor"
+                app:strokeColor="@color/primaryDarkColor"
+                android:visibility="invisible"/>
+
+        </LinearLayout>
     </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Status:"
-            android:layout_marginEnd="10dp"/>
-
-        <TextView
-            android:id="@+id/txtStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Aguardando"/>
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Spinner android:id="@+id/spinner"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:prompt="@string/exam_prompt"
-            />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/start_button"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Start"
-            android:layout_margin="10dp"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/stop_button"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Stop"
-            android:layout_margin="10dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-
-    </LinearLayout>
-</LinearLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

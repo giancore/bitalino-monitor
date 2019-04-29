@@ -11,32 +11,56 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Chronometer;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.example.bitalinomonitor.R;
-import com.example.bitalinomonitor.models.ExamOptionModel;
-import com.example.bitalinomonitor.utils.UserApplication;
-
-import com.google.android.material.button.MaterialButton;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.bitalinomonitor.R;
+import com.example.bitalinomonitor.models.ExamModel;
+import com.example.bitalinomonitor.models.ExamOptionModel;
+import com.example.bitalinomonitor.models.FrameModel;
+import com.example.bitalinomonitor.models.PatientModel;
+import com.example.bitalinomonitor.network.RetrofitConfig;
+import com.example.bitalinomonitor.utils.PausableChronometer;
+import com.example.bitalinomonitor.utils.UserApplication;
+import com.google.android.material.button.MaterialButton;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import info.plux.pluxapi.Communication;
-import info.plux.pluxapi.bitalino.*;
+import info.plux.pluxapi.bitalino.BITalinoCommunication;
+import info.plux.pluxapi.bitalino.BITalinoCommunicationFactory;
+import info.plux.pluxapi.bitalino.BITalinoDescription;
+import info.plux.pluxapi.bitalino.BITalinoException;
+import info.plux.pluxapi.bitalino.BITalinoFrame;
+import info.plux.pluxapi.bitalino.BITalinoState;
 import info.plux.pluxapi.bitalino.bth.OnBITalinoDataAvailable;
+import pl.bclogic.pulsator4droid.library.PulsatorLayout;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-import static info.plux.pluxapi.Constants.*;
+import static info.plux.pluxapi.Constants.ACTION_COMMAND_REPLY;
+import static info.plux.pluxapi.Constants.ACTION_DATA_AVAILABLE;
+import static info.plux.pluxapi.Constants.ACTION_DEVICE_READY;
+import static info.plux.pluxapi.Constants.ACTION_EVENT_AVAILABLE;
+import static info.plux.pluxapi.Constants.ACTION_STATE_CHANGED;
+import static info.plux.pluxapi.Constants.EXTRA_COMMAND_REPLY;
+import static info.plux.pluxapi.Constants.EXTRA_DATA;
+import static info.plux.pluxapi.Constants.EXTRA_STATE_CHANGED;
+import static info.plux.pluxapi.Constants.IDENTIFIER;
+import static info.plux.pluxapi.Constants.States;
 
 public class DeviceActivity extends AppCompatActivity implements OnBITalinoDataAvailable {
 
@@ -48,28 +72,37 @@ public class DeviceActivity extends AppCompatActivity implements OnBITalinoDataA
     private boolean isBITalino2 = false;
     private int selectedChannel = 0;
     private long timeWhenStopped = 0;
+    private UUID idPatient;
 
+    private PatientModel patient;
     private UserApplication userApplication;
     private BluetoothDevice bluetoothDevice;
     private BITalinoCommunication bitalino;
     private List<BITalinoFrame> bitalinoFrames = new ArrayList<>();
+    private RetrofitConfig retrofitConfig;
 
     private Handler handler;
 
-    @BindView(R.id.start_button)
-    MaterialButton btnStart;
-
-    @BindView(R.id.stop_button)
-    MaterialButton btnStop;
+    @BindView(R.id.button_process_exam)
+    MaterialButton btnProcessExam;
 
     @BindView(R.id.chronometer)
-    Chronometer chronometer;
+    PausableChronometer chronometer;
 
-    @BindView(R.id.txtStatus)
+    @BindView(R.id.textview_status)
     TextView txtStatus;
+
+    @BindView(R.id.textview_device)
+    TextView txtDevice;
 
     @BindView(R.id.spinner)
     Spinner spinner;
+
+    @BindView(R.id.pulsator)
+    PulsatorLayout pulsator;
+
+    @BindView(R.id.button_play)
+    Button btnPlay;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +110,10 @@ public class DeviceActivity extends AppCompatActivity implements OnBITalinoDataA
         setContentView(R.layout.activity_device);
         ButterKnife.bind(this);
 
+        Intent intent = getIntent();
+        idPatient = (UUID) intent.getSerializableExtra("idPatient");
+
+        retrofitConfig = new RetrofitConfig();
         userApplication = (UserApplication)getApplicationContext();
 
         List<String> examOptions = ExamOptionModel.getOptionsAsString();
@@ -105,8 +142,8 @@ public class DeviceActivity extends AppCompatActivity implements OnBITalinoDataA
             }
         });
 
-        btnStart.setOnClickListener(view -> start());
-        btnStop.setOnClickListener(view -> stop());
+        btnPlay.setOnClickListener(view -> play());
+        btnProcessExam.setOnClickListener(view -> processExam());
     }
 
     @Override
@@ -119,9 +156,11 @@ public class DeviceActivity extends AppCompatActivity implements OnBITalinoDataA
         bluetoothDevice = userApplication.getSelectedDevice();
 
         if (bluetoothDevice == null){
-            Intent goToScanDevices = new Intent(DeviceActivity.this, ScanDevicesActivity.class);
-            startActivity(goToScanDevices);
+            //Intent goToScanDevices = new Intent(DeviceActivity.this, ScanDevicesActivity.class);
+            //startActivity(goToScanDevices);
         } else {
+            txtDevice.setText(bluetoothDevice.getName());
+
             Communication communication = Communication.getById(bluetoothDevice.getType());
             if(communication.equals(Communication.DUAL)){
                 communication = Communication.BLE;
@@ -268,10 +307,36 @@ public class DeviceActivity extends AppCompatActivity implements OnBITalinoDataA
         return intentFilter;
     }
 
-    private void start(){
-        chronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-        chronometer.start();
+    private boolean isAcquisition = false;
 
+    private void enableFields(boolean isEnable) {
+        spinner.setEnabled(isEnable);
+    }
+
+    private void play(){
+        if (isAcquisition) {
+            chronometer.start();
+            pulsator.start();
+            btnPlay.setText("Parar");
+            btnProcessExam.setVisibility(View.INVISIBLE);
+        } else {
+            chronometer.stop();
+            pulsator.stop();
+            btnPlay.setText("Iniciar");
+            btnProcessExam.setVisibility(View.VISIBLE);
+        }
+
+        isAcquisition = !isAcquisition;
+        enableFields(isAcquisition);
+    }
+
+    private void start(){
+
+        if (isAcquisition) {
+            chronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+            chronometer.start();
+            pulsator.start();
+        /*
         try {
             chronometer.start();
 
@@ -280,12 +345,12 @@ public class DeviceActivity extends AppCompatActivity implements OnBITalinoDataA
         } catch (BITalinoException e) {
             e.printStackTrace();
         }
-    }
-
-    private void stop(){
-        timeWhenStopped = chronometer.getBase() - SystemClock.elapsedRealtime();
-        chronometer.stop();
-
+        */
+        } else {
+            timeWhenStopped = chronometer.getBase() - SystemClock.elapsedRealtime();
+            chronometer.stop();
+            pulsator.stop();
+        /*
         try {
             bitalino.stop();
             chronometer.stop();
@@ -299,7 +364,49 @@ public class DeviceActivity extends AppCompatActivity implements OnBITalinoDataA
 
         } catch (BITalinoException e) {
             e.printStackTrace();
+        }*/
         }
+
+        chronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+        chronometer.start();
+
+        pulsator.start();
+        /*
+        try {
+            chronometer.start();
+
+            //bitalino.start(new int[]{0,1,2,3,4,5}, 1);
+            bitalino.start(new int[]{ selectedChannel }, 1);
+        } catch (BITalinoException e) {
+            e.printStackTrace();
+        }
+        */
+    }
+
+    private void processExam(){
+
+        ArrayList<FrameModel> framesModel = new ArrayList<>();
+
+        for (BITalinoFrame frame : bitalinoFrames){
+            framesModel.add(new FrameModel(frame));
+        }
+
+        Call<ExamModel> call = retrofitConfig.getPatientService().saveExam(idPatient, new Date(), selectedChannel, framesModel);
+        call.enqueue(new Callback<ExamModel>()
+        {
+            @Override
+            public void onResponse(Call<ExamModel> call, Response<ExamModel> response) {
+                Intent goToGraphView = new Intent(DeviceActivity.this, GraphViewActivity.class);
+                goToGraphView.putExtra("FRAMES", (ArrayList<BITalinoFrame>) bitalinoFrames);
+                startActivity(goToGraphView);
+                finish();            }
+
+            @Override
+            public void onFailure(Call<ExamModel> call, Throwable t) {
+                Toast.makeText(DeviceActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
     private void connect(){

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="@style/AppTheme.NoActionBar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    android:layout_weight="3">
+
+    <TextView
+        android:id="@+id/textview_exam_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Electrocardiography"/>
+
+    <TextView
+        android:id="@+id/textview_exam_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="23/04/2019" />
+
+</LinearLayout>

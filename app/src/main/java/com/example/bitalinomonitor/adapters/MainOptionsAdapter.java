@@ -5,22 +5,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.bitalinomonitor.R;
 import com.example.bitalinomonitor.activities.DeviceActivity;
-import com.example.bitalinomonitor.activities.ScanDevicesActivity;
+import com.example.bitalinomonitor.activities.PatientListActivity;
 import com.example.bitalinomonitor.models.MainOptionModel;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 public class MainOptionsAdapter extends RecyclerView.Adapter<MainOptionsViewHolder> {
 
    private List<MainOptionModel> options = new ArrayList<>();
 
     public MainOptionsAdapter() {
-        MainOptionModel myPatients = new MainOptionModel("Meus Pacientes", "Lista de pacientes", R.drawable.ic_accessibility_black_24dp, null);
+        MainOptionModel myPatients = new MainOptionModel("Meus Pacientes", "Lista de pacientes", R.drawable.ic_accessibility_black_24dp, PatientListActivity.class);
         options.add(myPatients);
 
         MainOptionModel device = new MainOptionModel("Executar Exame", "Efetua uma exame com o dispositivo conectado", R.drawable.ic_sync_black_24dp, DeviceActivity.class);

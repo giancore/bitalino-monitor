@@ -1,6 +1,5 @@
 package com.example.bitalinomonitor.adapters;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,18 +14,17 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bitalinomonitor.R;
+import com.example.bitalinomonitor.activities.DeviceActivity;
+import com.example.bitalinomonitor.activities.ExamListActivity;
 import com.example.bitalinomonitor.activities.PatientActivity;
-import com.example.bitalinomonitor.activities.PatientListActivity;
 import com.example.bitalinomonitor.models.PatientModel;
 
 import java.util.List;
 
 public class PatientsAdapter extends RecyclerView.Adapter<PatientsViewHolder> {
     private final List<PatientModel> patients;
-    private final Context context;
 
-    public PatientsAdapter(Context context, List<PatientModel> patients) {
-        this.context = context;
+    public PatientsAdapter(List<PatientModel> patients) {
         this.patients = patients;
     }
 
@@ -53,36 +51,25 @@ public class PatientsAdapter extends RecyclerView.Adapter<PatientsViewHolder> {
             holder.photo.setScaleType(ImageView.ScaleType.FIT_XY);
         }
 
-        holder.buttonViewOption.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //creating a popup menu
-                PopupMenu popup = new PopupMenu(view.getContext(), holder.buttonViewOption);
-                //inflating menu from xml resource
-                popup.inflate(R.menu.options_menu);
-                //adding click listener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.menu1:
-                                //handle menu1 click
-                                break;
-                            case R.id.menu2:
-                                //handle menu2 click
-                                break;
-                            case R.id.menu3:
-                                //handle menu3 click
-                                break;
-                        }
-                        return false;
-                    }
-                });
-                //displaying the popup
-                popup.show();
-
-            }
+        holder.buttonViewOption.setOnClickListener((view) -> {
+            //creating a popup menu
+            PopupMenu popup = new PopupMenu(view.getContext(), holder.buttonViewOption);
+            //inflating menu from xml resource
+            popup.inflate(R.menu.menu_patient_list);
+            //adding click listener
+            popup.setOnMenuItemClickListener((MenuItem item) -> {
+                switch (item.getItemId()) {
+                    case R.id.menu_patient_list_1:
+                        goToDetails(view, patient);
+                        break;
+                    case R.id.menu_patient_list_2:
+                        //goToAddExam(view, patient);
+                        break;
+                }
+                return false;
+            });
+            //displaying the popup
+            popup.show();
         });
     }
 
@@ -93,7 +80,7 @@ public class PatientsAdapter extends RecyclerView.Adapter<PatientsViewHolder> {
 
     private void goToDetails(View view, PatientModel patient){
         Intent intent = new Intent(view.getContext(), PatientActivity.class);
-        intent.putExtra("patient", patient);
+        intent.putExtra("idPatient", patient.getId());
 
         view.getContext().startActivity(intent);
     }

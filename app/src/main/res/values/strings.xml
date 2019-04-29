@@ -13,4 +13,12 @@
     <string name="permission_denied_dialog_title">Functionality limited</string>
     <string name="permission_denied_dialog_message">Since location access has no been granted, this app will not be able to discover bluetooth devices.</string>
     <string name="permission_denied_dialog_positive_button">OK</string>
+    <string name="menu_patient_list_menu1">Editar</string>
+    <string name="menu_patient_list_menu2">Deletar</string>
+    <string name="menu_patient_menu1">Salvar</string>
+    <string name="menu_patient_menu2">Adicionar Exame</string>
+    <string name="activity_device_button_star">Iniciar</string>
+    <string name="activity_device_text_device">Dispositivo:</string>
+    <string name="activity_device_text_status">Status:</string>
+    <string name="menu_patient_menu3">Ver Exames</string>
 </resources>
