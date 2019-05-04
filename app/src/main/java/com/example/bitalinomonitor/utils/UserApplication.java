@@ -7,35 +7,24 @@ import android.content.res.Configuration;
 public class UserApplication extends Application {
     private static UserApplication singleton;
 
-    private String nome;
-    private String login;
     private BluetoothDevice selectedDevice;
+    private int selectedSamplingFrequency;
 
     public UserApplication() {
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     public BluetoothDevice getSelectedDevice() {
         return selectedDevice;
     }
 
+    public int getSelectedSamplingFrequency() { return selectedSamplingFrequency; }
+
     public void setSelectedDevice(BluetoothDevice selectedDevice) {
         this.selectedDevice = selectedDevice;
+    }
+
+    public void setSelectedSamplingFrequency(int selectedSamplingFrequency) {
+        this.selectedSamplingFrequency = selectedSamplingFrequency;
     }
 
     public UserApplication getInstance(){

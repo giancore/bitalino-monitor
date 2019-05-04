@@ -26,6 +26,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.bitalinomonitor.R;
 import com.example.bitalinomonitor.adapters.BluetoothItensAdapter;
+import com.example.bitalinomonitor.models.PatientModel;
 
 import java.util.ArrayList;
 
@@ -43,6 +44,7 @@ public class ScanDevicesActivity extends AppCompatActivity implements SwipeRefre
     private static final int REQUEST_ENABLE_BT = 1;
     private boolean isScanDevicesUpdateReceiverRegistered = false;
 
+    private PatientModel patient;
     private Handler mHandler;
     private BluetoothAdapter mBluetoothAdapter;
     private BTHDeviceScan bthDeviceScan;
@@ -59,6 +61,9 @@ public class ScanDevicesActivity extends AppCompatActivity implements SwipeRefre
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scandevices);
         ButterKnife.bind(this);
+
+        Intent intent = getIntent();
+        patient = (PatientModel) intent.getSerializableExtra("PATIENT");
 
         mHandler = new Handler();
 
@@ -128,7 +133,7 @@ public class ScanDevicesActivity extends AppCompatActivity implements SwipeRefre
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         deviceListRecyclerView.setLayoutManager(layoutManager);
 
-        bluetoothItensAdapter = new BluetoothItensAdapter(this, new ArrayList<>(0));
+        bluetoothItensAdapter = new BluetoothItensAdapter(this, new ArrayList<>(0), patient);
         deviceListRecyclerView.setAdapter(bluetoothItensAdapter);
 
         deviceListRecyclerView.addItemDecoration(

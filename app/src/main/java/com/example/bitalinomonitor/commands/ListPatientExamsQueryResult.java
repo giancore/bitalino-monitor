@@ -6,5 +6,5 @@ import java.util.UUID;
 public class ListPatientExamsQueryResult {
     public UUID id;
     public Date date;
-    public int type;
+    public int channel;
 }

@@ -2,7 +2,9 @@ package com.example.bitalinomonitor.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bitalinomonitor.R;
 import com.example.bitalinomonitor.adapters.PatientsAdapter;
-import com.example.bitalinomonitor.commands.CommandResult;
 import com.example.bitalinomonitor.commands.ListPatientQueryResult;
 import com.example.bitalinomonitor.models.PatientModel;
 import com.example.bitalinomonitor.network.RetrofitConfig;
@@ -30,11 +31,14 @@ public class PatientListActivity extends AppCompatActivity {
     private PatientsAdapter adapter;
     private RetrofitConfig retrofitConfig;
 
-    @BindView(R.id.list_patient)
+    @BindView(R.id.list_patients)
     RecyclerView patientList;
 
     @BindView(R.id.button_new_patient)
     Button btnNewPatient;
+
+    @BindView(R.id.list_patients_progress)
+    ProgressBar progressBar;
 
     private List<PatientModel> patients = new ArrayList<PatientModel>();
 
@@ -61,6 +65,7 @@ public class PatientListActivity extends AppCompatActivity {
         patients.clear();
         adapter = new PatientsAdapter(patients);
         patientList.setAdapter(adapter);
+        progressBar.setVisibility(View.VISIBLE);
 
         Call<List<ListPatientQueryResult>> call = retrofitConfig.getPatientService().getPatients();
         call.enqueue(new Callback<List<ListPatientQueryResult>>()
@@ -76,9 +81,12 @@ public class PatientListActivity extends AppCompatActivity {
 
                 adapter = new PatientsAdapter(patients);
                 patientList.setAdapter(adapter);
+
+                progressBar.setVisibility(View.INVISIBLE);
             }
             @Override
             public void onFailure(Call<List<ListPatientQueryResult>> call, Throwable t) {
+                progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(PatientListActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });

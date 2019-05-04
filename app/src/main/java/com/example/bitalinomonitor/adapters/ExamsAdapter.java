@@ -11,14 +11,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bitalinomonitor.R;
 import com.example.bitalinomonitor.activities.GraphViewActivity;
 import com.example.bitalinomonitor.models.ExamModel;
+import com.example.bitalinomonitor.models.PatientModel;
 
 import java.util.List;
 
 public class ExamsAdapter extends RecyclerView.Adapter<ExamsViewHolder> {
     private final List<ExamModel> exams;
+    private final PatientModel patient;
 
-    public ExamsAdapter(List<ExamModel> exams) {
+    public ExamsAdapter(List<ExamModel> exams, PatientModel patient) {
         this.exams = exams;
+        this.patient = patient;
     }
 
     @NonNull
@@ -34,7 +37,7 @@ public class ExamsAdapter extends RecyclerView.Adapter<ExamsViewHolder> {
 
         holder.itemView.setOnClickListener(v -> goToDetails(v, exam));
         holder.examType.setText(exam.getName());
-        holder.examDate.setText(exam.getDate().toString());
+        holder.examDate.setText(exam.getDateAsString());
     }
 
     @Override
@@ -44,7 +47,8 @@ public class ExamsAdapter extends RecyclerView.Adapter<ExamsViewHolder> {
 
     private void goToDetails(View view, ExamModel exam){
         Intent intent = new Intent(view.getContext(), GraphViewActivity.class);
-        intent.putExtra("exam", exam);
+        intent.putExtra("IDEXAM", exam.getId());
+        intent.putExtra("PATIENT", patient);
 
         view.getContext().startActivity(intent);
     }

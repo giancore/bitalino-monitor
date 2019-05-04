@@ -14,7 +14,6 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bitalinomonitor.R;
-import com.example.bitalinomonitor.activities.DeviceActivity;
 import com.example.bitalinomonitor.activities.ExamListActivity;
 import com.example.bitalinomonitor.activities.PatientActivity;
 import com.example.bitalinomonitor.models.PatientModel;
@@ -63,7 +62,10 @@ public class PatientsAdapter extends RecyclerView.Adapter<PatientsViewHolder> {
                         goToDetails(view, patient);
                         break;
                     case R.id.menu_patient_list_2:
-                        //goToAddExam(view, patient);
+                        goToDelete(patient);
+                        break;
+                    case R.id.menu_patient_list_3:
+                        goToViewExams(view, patient);
                         break;
                 }
                 return false;
@@ -81,7 +83,16 @@ public class PatientsAdapter extends RecyclerView.Adapter<PatientsViewHolder> {
     private void goToDetails(View view, PatientModel patient){
         Intent intent = new Intent(view.getContext(), PatientActivity.class);
         intent.putExtra("idPatient", patient.getId());
+        view.getContext().startActivity(intent);
+    }
 
+    private void goToDelete(PatientModel patient){
+
+    }
+
+    private void goToViewExams(View view, PatientModel patient){
+        Intent intent = new Intent(view.getContext(), ExamListActivity.class);
+        intent.putExtra("PATIENT", patient);
         view.getContext().startActivity(intent);
     }
 }

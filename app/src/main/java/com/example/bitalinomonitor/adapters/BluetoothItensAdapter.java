@@ -12,19 +12,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bitalinomonitor.R;
 import com.example.bitalinomonitor.activities.DeviceActivity;
+import com.example.bitalinomonitor.models.PatientModel;
 import com.example.bitalinomonitor.utils.UserApplication;
 
 import java.util.List;
 
 public class BluetoothItensAdapter extends RecyclerView.Adapter<BluetoothItensViewHolder> {
+    public static final int REQUEST_CODE_SCAN_DEVICES = 11;
+
     private final List<BluetoothDevice> devices;
     private final Activity context;
     private UserApplication userApplication;
-    public static final int REQUEST_CODE_SCAN_DEVICES = 11;
+    private PatientModel patient;
 
-    public BluetoothItensAdapter(Activity context, List<BluetoothDevice> devices) {
+    public BluetoothItensAdapter(Activity context, List<BluetoothDevice> devices, PatientModel patient) {
         this.devices = devices;
         this.context = context;
+        this.patient = patient;
     }
     @NonNull
     @Override
@@ -68,9 +72,10 @@ public class BluetoothItensAdapter extends RecyclerView.Adapter<BluetoothItensVi
     private void connectDevice(View view, BluetoothDevice device){
         userApplication.setSelectedDevice(device);
 
-        Intent goToScanDevices = new Intent(view.getContext(), DeviceActivity.class);
-        context.startActivityForResult(goToScanDevices, REQUEST_CODE_SCAN_DEVICES);
-        context.finish();
+        Intent goToScanDevices = new Intent(context, DeviceActivity.class);
+        goToScanDevices.putExtra("PATIENT", patient);
+        //context.startActivityForResult(goToScanDevices, REQUEST_CODE_SCAN_DEVICES);
+        context.onBackPressed();
         //view.getContext().startActivity(goToScanDevices);
     }
 }

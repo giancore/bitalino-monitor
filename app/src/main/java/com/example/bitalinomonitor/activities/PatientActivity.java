@@ -16,15 +16,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.example.bitalinomonitor.R;
 import com.example.bitalinomonitor.commands.CommandResult;
 import com.example.bitalinomonitor.commands.CreatePatientCommand;
 import com.example.bitalinomonitor.commands.GetPatientQueryResult;
-import com.example.bitalinomonitor.models.ExamModel;
 import com.example.bitalinomonitor.models.PatientModel;
 import com.example.bitalinomonitor.network.RetrofitConfig;
 import com.example.bitalinomonitor.utils.DateMask;
@@ -32,17 +28,13 @@ import com.example.bitalinomonitor.utils.Mask;
 import com.example.bitalinomonitor.utils.PatientFormHelper;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import info.plux.pluxapi.bitalino.BITalinoFrame;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,6 +42,7 @@ import retrofit2.Response;
 public class PatientActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_CAMERA = 567;
 
+    private UUID idPatient;
     private PatientFormHelper helper;
     private String caminhoFoto;
     private RetrofitConfig retrofitConfig;
@@ -75,7 +68,7 @@ public class PatientActivity extends AppCompatActivity {
         retrofitConfig = new RetrofitConfig();
         helper = new PatientFormHelper(this);
 
-        patientPhone.addTextChangedListener(Mask.insert("(##)#####-####", patientPhone));
+        patientPhone.addTextChangedListener(Mask.insert("(##) #####-####", patientPhone));
         patientDateOfBirth.addTextChangedListener(new DateMask());
         patientDateOfBirth.setOnClickListener((View v) -> {
             Locale locale = new Locale("pt", "BR");
@@ -96,7 +89,7 @@ public class PatientActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        UUID idPatient = (UUID) intent.getSerializableExtra("idPatient");
+        idPatient = (UUID) intent.getSerializableExtra("idPatient");
 
         if (idPatient != null) {
             Call<GetPatientQueryResult> call = retrofitConfig.getPatientService().getPatient(idPatient);
@@ -106,7 +99,7 @@ public class PatientActivity extends AppCompatActivity {
                 public void onResponse(Call<GetPatientQueryResult> call, Response<GetPatientQueryResult> response) {
                     GetPatientQueryResult body = response.body();
 
-                        PatientModel patient = new PatientModel(body.id, body.name, body.phone, body.photoPath);
+                    PatientModel patient = new PatientModel(body.id, body.name, body.phone, body.photoPath);
                     patient.setDateOfBirth(body.dateOfBirth);
                     helper.fillForm(patient);
                 }
@@ -155,18 +148,26 @@ public class PatientActivity extends AppCompatActivity {
                 createPatientCommand.name = patient.getName();
                 createPatientCommand.phone = patient.getTelephone();
                 createPatientCommand.photoPath = patient.getPhotoPath();
+                createPatientCommand.id = idPatient;
 
                 Call<CommandResult> call = retrofitConfig.getPatientService().savePatient(createPatientCommand);
                 call.enqueue(new Callback<CommandResult>()
                 {
                     @Override
                     public void onResponse(Call<CommandResult> call, Response<CommandResult> response) {
-                        Toast.makeText(PatientActivity.this, "Paciente " + patient.getName() + " salvo!", Toast.LENGTH_SHORT).show();
+                        boolean isSuccess = response.body().success;
+                        if (isSuccess){
+                            String message = String.format("Paciente %s salvo!", patient.getName());
+                            Toast.makeText(PatientActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            String message = response.body().message;
+                            Toast.makeText(PatientActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
                     }
                     @Override
                     public void onFailure(Call<CommandResult> call, Throwable t) {
                         Toast.makeText(PatientActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-
                     }
                 });
 
@@ -185,14 +186,14 @@ public class PatientActivity extends AppCompatActivity {
 
     private void goToAddExam(PatientModel patient){
         Intent intent = new Intent(PatientActivity.this, DeviceActivity.class);
-        intent.putExtra("patient", patient);
+        intent.putExtra("PATIENT", patient);
 
         startActivity(intent);
     }
 
     private void goToViewExams(PatientModel patient){
         Intent intent = new Intent(PatientActivity.this, ExamListActivity.class);
-        intent.putExtra("patient", patient);
+        intent.putExtra("PATIENT", patient);
 
         startActivity(intent);
     }

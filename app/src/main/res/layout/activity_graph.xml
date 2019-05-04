@@ -5,10 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ProgressBar
+        android:id="@+id/get_graph_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/exam_info"
+        android:text="Eletrocardiograma - Gian Mella - Tempo de Execução: 00:10:00 - 100Hz"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textSize="20sp"/>
+
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/graph"
-        />
+        android:id="@+id/graph"/>
 
 </LinearLayout>

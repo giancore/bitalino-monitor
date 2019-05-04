@@ -4,8 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ProgressBar
+        android:id="@+id/list_patients_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list_patient"
+        android:id="@+id/list_patients"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
