@@ -37,6 +37,10 @@ public class ExamModel implements Serializable {
     @Expose
     private long duration;
 
+    @SerializedName(value = "DurationAsTimeSpan", alternate = { "durationAsTimeSpan" })
+    @Expose
+    private String durationAsTimeSpan;
+
     @SerializedName(value = "Frequency", alternate = { "frequency" })
     @Expose
     private int frequency = 1;
@@ -101,6 +105,10 @@ public class ExamModel implements Serializable {
 
     public long getDuration() {
         return duration;
+    }
+
+    public String getDurationAsTimeSpan() {
+        return durationAsTimeSpan;
     }
 
     public void setDuration(long duration) {

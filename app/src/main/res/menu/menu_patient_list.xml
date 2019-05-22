@@ -12,4 +12,8 @@
     <item
         android:id="@+id/menu_patient_list_3"
         android:title="@string/menu_patient_list_menu3" />
+
+    <item
+        android:id="@+id/menu_patient_list_4"
+        android:title="@string/menu_patient_list_menu4" />
 </menu>

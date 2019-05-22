@@ -68,7 +68,7 @@ public class PatientActivity extends AppCompatActivity {
         retrofitConfig = new RetrofitConfig();
         helper = new PatientFormHelper(this);
 
-        patientPhone.addTextChangedListener(Mask.insert("(##) #####-####", patientPhone));
+        patientPhone.addTextChangedListener(Mask.insert("(##)#####-####", patientPhone));
         patientDateOfBirth.addTextChangedListener(new DateMask());
         patientDateOfBirth.setOnClickListener((View v) -> {
             Locale locale = new Locale("pt", "BR");
@@ -133,6 +133,11 @@ public class PatientActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_patient, menu);
+
+        if (idPatient != null) {
+            MenuItem item = menu.findItem(R.id.menu2);
+            item.setVisible(false);
+        }
 
         return super.onCreateOptionsMenu(menu);
     }

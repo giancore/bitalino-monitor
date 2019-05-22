@@ -32,6 +32,8 @@
         </activity>
         <activity android:name=".activities.ExamListActivity">
         </activity>
+        <activity android:name=".activities.MedicalRecordsActivity">
+        </activity>
         <activity android:name=".activities.GraphViewActivity" android:screenOrientation="landscape" >
         </activity>
     </application>

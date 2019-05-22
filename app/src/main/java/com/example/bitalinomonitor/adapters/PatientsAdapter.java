@@ -8,23 +8,33 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bitalinomonitor.R;
+import com.example.bitalinomonitor.activities.DeviceActivity;
 import com.example.bitalinomonitor.activities.ExamListActivity;
 import com.example.bitalinomonitor.activities.PatientActivity;
+import com.example.bitalinomonitor.commands.CommandResult;
 import com.example.bitalinomonitor.models.PatientModel;
+import com.example.bitalinomonitor.network.RetrofitConfig;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class PatientsAdapter extends RecyclerView.Adapter<PatientsViewHolder> {
     private final List<PatientModel> patients;
+    private RetrofitConfig retrofitConfig;
 
     public PatientsAdapter(List<PatientModel> patients) {
         this.patients = patients;
+        this.retrofitConfig = new RetrofitConfig();
     }
 
     @NonNull
@@ -51,20 +61,20 @@ public class PatientsAdapter extends RecyclerView.Adapter<PatientsViewHolder> {
         }
 
         holder.buttonViewOption.setOnClickListener((view) -> {
-            //creating a popup menu
             PopupMenu popup = new PopupMenu(view.getContext(), holder.buttonViewOption);
-            //inflating menu from xml resource
             popup.inflate(R.menu.menu_patient_list);
-            //adding click listener
             popup.setOnMenuItemClickListener((MenuItem item) -> {
                 switch (item.getItemId()) {
                     case R.id.menu_patient_list_1:
                         goToDetails(view, patient);
                         break;
                     case R.id.menu_patient_list_2:
-                        goToDelete(patient);
+                        goToDelete(view, patient);
                         break;
                     case R.id.menu_patient_list_3:
+                        goToAddExam(view, patient);
+                        break;
+                    case R.id.menu_patient_list_4:
                         goToViewExams(view, patient);
                         break;
                 }
@@ -86,12 +96,30 @@ public class PatientsAdapter extends RecyclerView.Adapter<PatientsViewHolder> {
         view.getContext().startActivity(intent);
     }
 
-    private void goToDelete(PatientModel patient){
-
+    private void goToDelete(View view, PatientModel patient){
+        Call<CommandResult> call = retrofitConfig.getPatientService().deletePatient(patient.getId());
+        call.enqueue(new Callback<CommandResult>()
+        {
+            @Override
+            public void onResponse(Call<CommandResult> call, Response<CommandResult> response) {
+                String message = response.body().message;
+                Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onFailure(Call<CommandResult> call, Throwable t) {
+                Toast.makeText(view.getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void goToViewExams(View view, PatientModel patient){
         Intent intent = new Intent(view.getContext(), ExamListActivity.class);
+        intent.putExtra("PATIENT", patient);
+        view.getContext().startActivity(intent);
+    }
+
+    private void goToAddExam(View view, PatientModel patient){
+        Intent intent = new Intent(view.getContext(), DeviceActivity.class);
         intent.putExtra("PATIENT", patient);
         view.getContext().startActivity(intent);
     }

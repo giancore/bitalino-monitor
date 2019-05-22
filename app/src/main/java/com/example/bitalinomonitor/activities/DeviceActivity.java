@@ -120,6 +120,7 @@ public class DeviceActivity extends AppCompatActivity implements OnBITalinoDataA
         retrofitConfig = new RetrofitConfig();
         bitalinoConfiguration = new BitalinoConfiguration();
         userApplication = (UserApplication)getApplicationContext();
+        progressBar.setVisibility(View.INVISIBLE);
 
         loadSpinners();
 
@@ -255,6 +256,7 @@ public class DeviceActivity extends AppCompatActivity implements OnBITalinoDataA
                         break;
                     case CONNECTED:
                         txtStatus.setText("Conectado");
+                        btnPlay.setEnabled(true);
                         break;
                     case ACQUISITION_TRYING:
                         break;
@@ -338,6 +340,8 @@ public class DeviceActivity extends AppCompatActivity implements OnBITalinoDataA
     }
 
     private void processExam(){
+        btnPlay.setEnabled(false);
+
         exam.setDate(new Date());
         exam.setBitalinoFrames(bitalinoFrames);
         exam.setIdPatient(patient.getId());
@@ -358,13 +362,13 @@ public class DeviceActivity extends AppCompatActivity implements OnBITalinoDataA
                     LinkedTreeMap<String, String> data = (LinkedTreeMap<String, String>) response.body().data;
                     //List<LinkedTreeMap<?, ?>> parsedResults = (List<LinkedTreeMap<?, ?>>) response.body().data;
                     UUID idExam =  UUID.fromString(data.get("id"));
-                    exam.setId(idExam);
 
                     String message = response.body().message;
                     Toast.makeText(DeviceActivity.this, message, Toast.LENGTH_SHORT).show();
 
                     Intent goToGraphView = new Intent(DeviceActivity.this, GraphViewActivity.class);
-                    goToGraphView.putExtra("EXAM", exam);
+                    goToGraphView.putExtra("IDEXAM", idExam);
+                    goToGraphView.putExtra("PATIENT", patient);
                     startActivity(goToGraphView);
                     finish();
                 } else {

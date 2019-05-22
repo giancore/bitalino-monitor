@@ -1,28 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <ProgressBar
-        android:id="@+id/get_graph_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/exam_info"
-        android:text="Eletrocardiograma - Gian Mella - Tempo de Execução: 00:10:00 - 100Hz"
         android:layout_gravity="center"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="20sp"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_filter"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:text="Filtrar Sinal"
+            android:textColor="@color/primaryDarkColor"
+            app:strokeColor="@color/primaryDarkColor"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_medicalRecord"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:text="Prontuário"
+            android:textColor="@color/primaryDarkColor"
+            app:strokeColor="@color/primaryDarkColor"/>
+    </LinearLayout>
+
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/graph"/>
+
 
 </LinearLayout>

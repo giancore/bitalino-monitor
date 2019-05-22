@@ -9,16 +9,14 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/bottom_sheet_behavior">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <ProgressBar
-            android:id="@+id/process_exam_progress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
         <com.example.bitalinomonitor.utils.PausableChronometer
             android:id="@+id/chronometer"
@@ -93,6 +91,7 @@
                     android:textSize="24sp"
                     android:textColor="@color/primaryTextColor"
                     android:elevation="6dp"
+                    android:enabled="false"
                     android:id="@+id/button_play"/>
 
             </pl.bclogic.pulsator4droid.library.PulsatorLayout>
@@ -146,5 +145,11 @@
                 android:visibility="invisible"/>
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/process_exam_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
+</ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
