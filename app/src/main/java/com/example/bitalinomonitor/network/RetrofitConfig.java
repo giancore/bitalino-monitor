@@ -18,7 +18,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitConfig {
     private final Retrofit retrofit;
-    private static final String URL = "http://192.168.0.104/BitalinoMonitor.Api/";
+    //private static final String URL = "http://192.168.0.104/BitalinoMonitor.Api/";
+    private static final String URL = "http://bitalino-monitor-web-api.azurewebsites.net/";
     private IPatientService patientService;
 
     public RetrofitConfig() {

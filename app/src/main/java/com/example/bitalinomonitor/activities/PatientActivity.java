@@ -160,7 +160,7 @@ public class PatientActivity extends AppCompatActivity {
                 {
                     @Override
                     public void onResponse(Call<CommandResult> call, Response<CommandResult> response) {
-                        boolean isSuccess = response.body().success;
+                        boolean isSuccess = response.errorBody() != null && response.body().success;
                         if (isSuccess){
                             String message = String.format("Paciente %s salvo!", patient.getName());
                             Toast.makeText(PatientActivity.this, message, Toast.LENGTH_SHORT).show();

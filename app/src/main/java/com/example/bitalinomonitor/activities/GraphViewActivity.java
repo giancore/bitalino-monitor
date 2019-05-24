@@ -108,33 +108,20 @@ public class GraphViewActivity extends AppCompatActivity {
                     double timeCounter = 0;
                     double xValue = 0;
                     int samplingFrequency = exam.getFrequency();
-                    int visualizationFrequency = 100;
 
                     ArrayList<DataPoint> dataPoints = new ArrayList<>();
-                    double samplingCounter = 0;
-                    double samplingFrames = visualizationFrequency / samplingFrequency;
 
                     if (filteredFrames != null) {
-                        for (Double frame : filteredFrames) {
-
-                            //if (samplingCounter++ >= samplingFrames) {
-                                timeCounter++;
-
-                                xValue = timeCounter / samplingFrequency * 1000;
-
-                                dataPoints.add(new DataPoint(xValue, frame));
-
-                                samplingCounter -= samplingFrames;
-                            //}
+                        for (double frame : filteredFrames) {
+                            timeCounter++;
+                            xValue = timeCounter / samplingFrequency * 1000;
+                            dataPoints.add(new DataPoint(xValue, frame));
                         }
-
-                        //graph.removeAllSeries();
 
                         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoints.toArray(new DataPoint[dataPoints.size()]));
                         series.setColor(Color.MAGENTA);
 
                         graph.addSeries(series);
-                        //graphConfiguration();
                     }
                 } else {
                     String message = response.body().message;
@@ -158,25 +145,14 @@ public class GraphViewActivity extends AppCompatActivity {
         double timeCounter = 0;
         double xValue = 0;
         int samplingFrequency = exam.getFrequency();
-        int visualizationFrequency = 100;
-
         ArrayList<DataPoint> dataPoints = new ArrayList<>();
-        double samplingCounter = 0;
-        double samplingFrames = visualizationFrequency / samplingFrequency;
 
         for (FrameModel frame : exam.getFrames()) {
 
-            //if (samplingCounter++ >= samplingFrames) {
-                timeCounter++;
-
-                xValue = timeCounter / samplingFrequency * 1000;
-
-                double analog = frame.getAnalog(exam.getChannel());
-
-                dataPoints.add(new DataPoint(xValue, analog));
-
-                samplingCounter -= samplingFrames;
-            //}
+            timeCounter++;
+            xValue = timeCounter / samplingFrequency * 1000;
+            double analog = frame.getAnalog(exam.getChannel());
+            dataPoints.add(new DataPoint(xValue, analog));
         }
 
         graph.removeAllSeries();
@@ -198,26 +174,40 @@ public class GraphViewActivity extends AppCompatActivity {
 
         graph.addSeries(series);
         graphConfiguration();
-
     }
 
     private void graphConfiguration() {
-        graph.getViewport().setYAxisBoundsManual(true);
-        graph.getViewport().setMinY(-2);
-        graph.getViewport().setMaxY(2);
-        //graph.getViewport().setXAxisBoundsManual(true);
-        //graph.getViewport().setMinX(4);
-        //graph.getViewport().setMaxX(80);
+        //graph.getViewport().setYAxisBoundsManual(true);
+
+        if(exam.getChannel() == 0) { //EMG
+            graph.getViewport().setMinY(-1.65);
+            graph.getViewport().setMaxY(1.65);
+        }
+        else if (exam.getChannel() == 1) { //ECG
+            graph.getViewport().setMinY(1.5);
+            graph.getViewport().setMaxY(-1.5);
+        }
+        else if (exam.getChannel() == 2) { //EDA
+            graph.getViewport().setMinY(0);
+            graph.getViewport().setMaxY(25);
+        }
+        else if (exam.getChannel() == 3) { //EEG
+            graph.getViewport().setYAxisBoundsManual(true);
+
+            graph.getViewport().setMinY(-1);
+            graph.getViewport().setMaxY(1);
+
+            graph.getViewport().setScrollableY(true);
+        }
 
         // enable scaling
-        graph.getViewport().setMaxX(2000);
+        //graph.getViewport().setMaxX(2000);
         graph.getViewport().setScrollable(true);
         graph.getViewport().setScalable(true);
-        //graph.getViewport().setScalableY(true);
+        graph.getViewport().setScalableY(true);
 
         graph.getGridLabelRenderer().setHighlightZeroLines(false);
-
-        graph.getGridLabelRenderer().setHorizontalAxisTitle("Minutes");
+        graph.getGridLabelRenderer().setHorizontalAxisTitle("Milissegundos");
         graph.getGridLabelRenderer().setHorizontalAxisTitleColor(Color.BLACK);
 
         if(exam.getChannel() == 0 || exam.getChannel() == 1) {
@@ -231,13 +221,10 @@ public class GraphViewActivity extends AppCompatActivity {
         }
 
         graph.getGridLabelRenderer().setVerticalAxisTitleColor(Color.BLACK);
-        //graph.setLegendRenderer(new UniqueLegendRenderer(graph));
-        //graph.getLegendRenderer().setVisible(true);
-
         graph.getGridLabelRenderer().setVerticalLabelsColor(Color.BLACK);
         graph.getGridLabelRenderer().setHorizontalLabelsColor(Color.BLACK);
 
-        graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+/*        graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @SuppressLint("DefaultLocale")
             @Override
             public String formatLabel(double value, boolean isValueX) {
@@ -254,7 +241,7 @@ public class GraphViewActivity extends AppCompatActivity {
                     return super.formatLabel(value, isValueX);
                 }
             }
-        });
+        });*/
     }
 
     private void goToMedicalRecords(){

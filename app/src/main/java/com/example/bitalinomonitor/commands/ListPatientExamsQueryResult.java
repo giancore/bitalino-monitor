@@ -7,4 +7,5 @@ public class ListPatientExamsQueryResult {
     public UUID id;
     public Date date;
     public int channel;
+    public int frequency;
 }

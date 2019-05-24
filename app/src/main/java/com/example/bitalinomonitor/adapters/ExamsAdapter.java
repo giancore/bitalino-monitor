@@ -34,9 +34,10 @@ public class ExamsAdapter extends RecyclerView.Adapter<ExamsViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ExamsViewHolder holder, int position) {
         ExamModel exam = exams.get(position);
+        String examType = String.format("%s - %sHz", exam.getName(), exam.getFrequency());
 
         holder.itemView.setOnClickListener(v -> goToDetails(v, exam));
-        holder.examType.setText(exam.getName());
+        holder.examType.setText(examType);
         holder.examDate.setText(exam.getDateAsString());
     }
 

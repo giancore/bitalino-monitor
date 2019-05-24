@@ -72,6 +72,7 @@ public class ExamListActivity extends AppCompatActivity {
                     model.setId(exam.id);
                     model.setDate(exam.date);
                     model.setChannel(exam.channel);
+                    model.setFrequency(exam.frequency);
                     exams.add(model);
                 }
 
