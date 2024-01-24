@@ -2,12 +2,9 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 28
-    buildToolsVersion '28.0.3'
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 9
-        versionName "0.0.9"
     }
     buildTypes {
         release {
@@ -17,6 +14,7 @@ android {
     }
     productFlavors {
     }
+    namespace 'info.plux.pluxapi'
 }
 
 dependencies {
